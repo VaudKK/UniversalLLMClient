@@ -1,5 +1,4 @@
 import asyncio
-import time
 
 
 from universal_llm_client.observability import logger
@@ -8,25 +7,21 @@ from universal_llm_client.observability import logger
 from universal_llm_client import (
     LLMClient,
     LLMSettings,
-    OpenAIProvider
+    AnthropicProvider,
 )
 
 
 async def main():
     settings = LLMSettings()
-    provider = OpenAIProvider(settings)
+    provider = AnthropicProvider(settings)
     client = LLMClient(provider)
 
     try:
 
-        response = await client.generate(
-            prompt = "Explain Go goroutines to a Java developer.",
-            system_instruction = (
-                "You are a senior backend engineer."
-            ),
-        )
-
-        print(response.content)
+        async for chunk in client.stream(
+            prompt = "Explain the theory of relativity in simple terms.",
+        ):
+            print(chunk, end="", flush=True)
 
 
     finally:

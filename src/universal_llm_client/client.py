@@ -1,5 +1,6 @@
 
 
+from collections.abc import AsyncIterator
 import time
 
 from universal_llm_client.models.request import LLMRequest
@@ -48,6 +49,20 @@ class LLMClient:
         )
 
         return response
+
+    async def stream(
+            self,
+            prompt: str,
+            **kwargs,
+    ) -> AsyncIterator[str]:
+
+        request = LLMRequest(
+            prompt = prompt,
+            **kwargs,
+        )
+
+        async for chunk in self.provider.stream(request):
+            yield chunk
 
     async def close(self) -> None:
         await self.provider.close()

@@ -8,10 +8,12 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=2.6.0",
     "httpx>=0.28.1",
     "openai>=3.42.1",
     "pydantic>=2.14.2",
     "pydantic-settings>=2.16.2",
+    "pytest-asyncio>=1.4.1.post1",
     "structlog>=26.1.0",
     "tenacity>=9.2.1",
 ]
