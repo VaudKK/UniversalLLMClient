@@ -17,11 +17,17 @@ async def main():
     client = LLMClient(provider)
 
     try:
+        
+        response = await client.generate(
+             prompt = "Explain the theory of relativity in simple terms.",
+        )
+        
+        print(response)
 
-        async for chunk in client.stream(
-            prompt = "Explain the theory of relativity in simple terms.",
-        ):
-            print(chunk, end="", flush=True)
+        # async for chunk in client.stream(
+        #     prompt = "Explain the theory of relativity in simple terms.",
+        # ):
+        #     print(chunk, end="", flush=True)
 
 
     finally:

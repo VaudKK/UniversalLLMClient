@@ -5,6 +5,7 @@ import time
 
 from universal_llm_client.models.request import LLMRequest
 from universal_llm_client.models.responses import LLMResponse
+from universal_llm_client.prompts.parameters import GenerationConfig
 from universal_llm_client.providers.base import BaseLLMProvider
 from universal_llm_client.usage import UsageTracker
 from universal_llm_client.observability import logger
@@ -21,9 +22,16 @@ class LLMClient:
             prompt: str,
             **kwargs,
     ) -> LLMResponse:
+        
+        config = GenerationConfig(
+            temperature=0.2,
+            top_p=1.0,
+            max_output_tokens=1000
+        )
 
         request = LLMRequest(
             prompt = prompt,
+            generation=config,
             **kwargs,
         )
 

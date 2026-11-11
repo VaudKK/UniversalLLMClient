@@ -39,7 +39,7 @@ class OpenAIProvider(BaseLLMProvider):
             params = {
                 "model": model,
                 "input": request.prompt,
-                "max_output_tokens": request.max_output_tokens,
+                "max_output_tokens": request.generation.max_output_tokens,
             }
 
             if request.system_instruction:
@@ -83,7 +83,7 @@ class OpenAIProvider(BaseLLMProvider):
             params = {
                 "model": model,
                 "input": request.prompt,
-                "max_output_tokens": request.max_output_tokens,
+                "max_output_tokens": request.generation.max_output_tokens,
             }
 
             if request.system_instruction:

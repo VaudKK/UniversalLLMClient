@@ -33,7 +33,7 @@ class AnthropicProvider(BaseLLMProvider):
 
         try:
             result = await self.client.messages.create(
-                max_tokens=request.max_output_tokens,
+                max_tokens=request.generation.max_output_tokens,
                 messages=[
                     {
                         "role": "user",
@@ -44,14 +44,15 @@ class AnthropicProvider(BaseLLMProvider):
             )
 
             return LLMResponse(
-                model=result.model,
-                content=result.content,
+                model=model,
+                content=result.content[0].text,
                 provider="anthropic",
                 usage=TokenUsage(
-                    input_tokens=result.usage.input_tokens if result.usage else 0,
-                    output_tokens=result.usage.output_tokens if result.usage else 0,
-                    total_tokens= sum(result.usage.input_tokens,result.usage.output_tokens)
-                )
+                                    input_tokens=result.usage.input_tokens if result.usage else 0,
+                                    output_tokens=result.usage.output_tokens if result.usage else 0,
+                                    total_tokens= result.usage.input_tokens + result.usage.output_tokens,
+                                ),
+                finish_reason=result.stop_reason,
             )
         except anthropic.APIStatusError as exc:
             raise LLMProviderError(
@@ -65,14 +66,14 @@ class AnthropicProvider(BaseLLMProvider):
 
         try:
             async with self.client.messages.stream(
-                max_tokens=request.max_output_tokens,
+                max_tokens=request.generation.max_output_tokens,
                 messages=[
                     {
                         "role":"user",
                         "content": request.prompt,
                     }
                 ],
-                model=model
+                model=model,
             ) as stream:
                 async for text in stream.text_stream:
                     yield text
